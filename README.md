@@ -5,7 +5,7 @@ DFS and BFT
 ![](images/DFSBFT.png)
 
 Add Nodes, Add Edges and Remove Edges
-![](images/AddNodesAndEdges.png)
+![](images/AddNodeAndEdges.png)
 
 Create Linked List and Random Graph
 ![](images/CreateGraphs.png)
