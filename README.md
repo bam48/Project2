@@ -1,5 +1,7 @@
 # Project2
 # Parts 1 - 3
+I haven't finished #5 and #6
+
 
 DFS and BFT
 ![](images/DFSBFT.png)
