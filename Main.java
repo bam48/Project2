@@ -1,7 +1,9 @@
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-
+        /*
+        System.out.println("Traverse Town");
+        System.out.println();
         GraphNode a = new GraphNode("A");
         GraphNode b = new GraphNode("B");
         GraphNode c = new GraphNode("C");
@@ -19,8 +21,13 @@ public class Main {
 
         Graph graph =  new Graph();
         GraphSearch search = new GraphSearch();
-        graph.vertices = new ArrayList<>(List.of(a,b,c,d,e,f));
+        graph.vertices = new ArrayList<>(List.of(a,b,c,d,e,f,g));
         graph.printAllNodes();
+
+        System.out.println("     A");
+        System.out.println("   B   C");
+        System.out.println(" D  E  F");
+        System.out.println("                          G");
         System.out.println();
 
         ArrayList<GraphNode> dfsRec = search.DFSRec(e, c);
@@ -35,6 +42,7 @@ public class Main {
         graph.unVistAllNodes();
         ArrayList<GraphNode> dfsIterNoPath = search.DFSIter(e, g);
         System.out.println("DFSIter From E to G. No Path");
+        System.out.println();
         printPath(dfsIterNoPath);
 
         graph.unVistAllNodes();
@@ -84,19 +92,137 @@ public class Main {
         }
         System.out.println();
 
-        System.out.println("Recursive BST on Linked List of 100. StackOverflow on 10000");
-
+        System.out.println("Recursive BST on Linked List of 100. No StackOverflow");
         Graph graph3 = createLinkedList(100);
         ArrayList<GraphNode> bftRecLL = BFTRecLinkedList(graph3);
-        printPath(bftRecLL);
-        System.out.println();
 
         System.out.println("Iterative BST on Linked List of 10000. No StackOverflow");
         Graph graph4 = createLinkedList(10000);
         ArrayList<GraphNode> bftIterLL = BFTIterLinkedList(graph4);
-        printPath(bftIterLL);
+
+        System.out.println("Recursive BST on Linked List of 10000. StackOverflow");
+        System.out.println();
+        System.out.println("-----------------------------------------------------------------------");
         System.out.println();
 
+        System.out.println("Thank U, Vertext ");
+        System.out.println();
+        GraphNode aa = new GraphNode("A");
+        GraphNode bb = new GraphNode("B");
+        GraphNode cc = new GraphNode("C");
+        GraphNode dd = new GraphNode("D");
+        GraphNode ee = new GraphNode("E");
+        GraphNode ff = new GraphNode("F");
+        GraphNode gg = new GraphNode("G");
+        GraphNode hh = new GraphNode("H");
+
+        aa.neighbors = new ArrayList<>(List.of(bb, dd));
+        cc.neighbors = new ArrayList<>(List.of (dd, gg, ff));
+        dd.neighbors = new ArrayList<>(List.of(gg));
+        hh.neighbors = new ArrayList<>(List.of(ee, ff));
+
+        Graph graph6 =  new Graph();
+        graph6.vertices = new ArrayList<>(List.of(aa,bb,cc,dd,ee,ff,gg,hh));
+        graph6.printAllNodes();
+
+        TopSort tp = new TopSort();
+        DirectedGraph dg = new DirectedGraph();
+        dg.vertices = graph6.vertices;
+        ArrayList<GraphNode> kahnsPath  = tp.kahns(dg);
+        ArrayList<GraphNode> mDFSPath  = tp.mDFS(dg);
+        System.out.println("kahns");
+        printPath(kahnsPath);
+        System.out.println("mDFS");
+        printPath(mDFSPath);
+
+        System.out.println("kahns 10000");
+        tp.kahns(createRandomDAGIter(1000));
+        System.out.println("mDFS 10000");
+        tp.mDFS(createRandomDAGIter(1000));
+
+        System.out.println();
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println();
+
+         */
+
+        System.out.println("I Node You Want Me");
+
+
+
+    }
+
+    static HashMap<GraphNode, Integer> dijkstras(final WGraphNode start){
+        HashMap<GraphNode, Integer> minValues = new  HashMap<GraphNode, Integer>();
+        
+        return minValues;
+    }
+
+    static WeightedGraph createRandomCompleteWeightedGraph(final int n){
+        WeightedGraph wg = new WeightedGraph();
+        Random random = new Random();
+
+        for(int i = 0; i < n; i++){
+            char a = (char) (random.nextInt(26) + 'A');
+            char b = (char) (random.nextInt(26) + 'A');
+            String s = String.valueOf(a) + String.valueOf(b);
+            wg.addNode(s);
+        }
+
+        for(WGraphNode node: wg.getAllNodes()){
+            for(WGraphNode secondNode: wg.getAllNodes()){
+                if(node != secondNode){
+                    int edgeWeight = random.nextInt(20);
+                    wg.addWeightedEdge(node, secondNode, edgeWeight);
+                }
+            }
+        }
+
+        return wg;
+
+    }
+
+    //Name changed from createLinkedList to createLinkedListW due to duplicate from previous problem
+    static WeightedGraph createLinkedListW(final int n){
+        WeightedGraph wg = new WeightedGraph();
+        Random random = new Random();
+
+        for(int i = 0; i < n; i++){
+            char a = (char) (random.nextInt(26) + 'A');
+            char b = (char) (random.nextInt(26) + 'A');
+            String s = String.valueOf(a) + String.valueOf(b);
+            wg.addNode(s);
+
+            if(i == 0)
+                continue;
+
+            WGraphNode first = wg.vertices.get(i - 1);
+            WGraphNode second = wg.vertices.get(i);
+            wg.addWeightedEdge(first, second, 1);
+        }
+
+        return wg;
+    }
+
+    static DirectedGraph createRandomDAGIter(final int n){
+        DirectedGraph dag = new DirectedGraph();
+        Random random = new Random();
+
+        for(int i = 0; i < n; i++){
+            //char a = (char) (random.nextInt(26) + 'A');
+            //char b = (char) (random.nextInt(26) + 'A');
+            //String s = String.valueOf(a) + String.valueOf(b);
+            String s  = String.valueOf(i);
+            dag.addNode(s);
+        }
+
+        int num = dag.vertices.size();
+        for (GraphNode node: dag.vertices) {
+            int secondNodeIndex = random.nextInt(num);
+            GraphNode secondNode = dag.vertices.get(secondNodeIndex);
+            dag.addDirectedEdge(node, secondNode);
+        }
+        return dag;
 
     }
 
