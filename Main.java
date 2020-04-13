@@ -1,7 +1,8 @@
+import java.awt.dnd.DnDConstants;
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-        
+
         System.out.println("Traverse Town");
         System.out.println();
         GraphNode a = new GraphNode("A");
@@ -144,18 +145,145 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------");
         System.out.println();
 
-        
 
         System.out.println("I Node You Want Me");
+        WGraphNode dA = new WGraphNode("A");
+        WGraphNode dB = new WGraphNode("B");
+        WGraphNode dC = new WGraphNode("C");
+        WGraphNode dD = new WGraphNode("D");
+        WGraphNode dE = new WGraphNode("E");
+
+        WeightedGraph wGraph = new WeightedGraph();
+        wGraph.vertices = new ArrayList<>(List.of(dA,dB,dC,dD,dE));
+        wGraph.addWeightedEdge(dA, dB, 3);
+        wGraph.addWeightedEdge(dA, dD, 5);
+        wGraph.addWeightedEdge(dB, dD, 1);
+        wGraph.addWeightedEdge(dD, dE, 2);
+        wGraph.addWeightedEdge(dB, dC, 2);
+        wGraph.addWeightedEdge(dB, dE, 6);
+        wGraph.addWeightedEdge(dE, dC, 1);
+        System.out.println("Dots represent arrows for direction. Sorry for the terrible graph");
+        System.out.println("         A");
+        System.out.println("        / \\");
+        System.out.println("      .     .");
+        System.out.println("     3       5");
+        System.out.println("    B  --. 1  D");
+        System.out.println("  /  \\      /");
+        System.out.println(" .    .    .");
+        System.out.println("2     6    2");
+        System.out.println("C        E");
+        System.out.println();
+
+        HashMap<WGraphNode, Integer> minVal = dijkstras(dA);
+        for(WGraphNode node: minVal.keySet()){
+            System.out.println(node.data + " " +  minVal.get(node));
+        }
+
+        System.out.println();
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println();
+
+
+        System.out.println("Wish Upon A*");
+
 
 
 
     }
 
-    static HashMap<GraphNode, Integer> dijkstras(final WGraphNode start){
-        HashMap<GraphNode, Integer> minValues = new  HashMap<GraphNode, Integer>();
-        
+
+    static class StarNode implements Comparable<StarNode>{
+        GridNode gridNode;
+        int costSoFar;
+        int heuristic;
+        int totalCost;
+
+
+        public StarNode(GridNode starNode, int costSoFar, int heuristic) {
+           this.gridNode = starNode;
+           this.costSoFar = costSoFar;
+           this.heuristic = heuristic;
+           this.totalCost = this.costSoFar + this.heuristic;
+        }
+
+        @Override
+        public int compareTo(StarNode node){
+            if(totalCost < node.totalCost){
+                return -1;
+            }
+            if(totalCost > node.totalCost){
+                return 1;
+            }
+            return 0;
+        }
+
+    }
+
+    private static int getManDist(GridNode start, GridNode end){
+        int xDif = Math.abs(start.x - end.x);
+        int yDif = Math.abs(start.y - end.y);
+        return xDif + yDif;
+    }
+
+
+    GridGraph createRandomGridGraph(int n){
+        GridGraph gg = new GridGraph();
+        for(int x = 0; x < n; x++){
+            for(int y = 0; y < n; y++){
+                String xy = "(" + x + ", " + y + ")";
+                gg.addGridNode(x, y, xy);
+            }
+        }
+
+        for(GridNode node: gg.getAllNodes()){
+            for(GridNode neighbor: node.neighbors){
+                if(Math.random() < 0.3){
+                    gg.addUndirectedEdge(node, neighbor);
+                }
+            }
+        }
+
+        return gg;
+    }
+
+    static HashMap<WGraphNode, Integer> dijkstras(final WGraphNode start){
+        HashMap<WGraphNode, Integer> minValues = new  HashMap<WGraphNode, Integer>();
+        Queue<DNode> queue = new LinkedList<DNode>();
+        DNode dNode = new DNode(start, 0);
+
+        while(dNode != null){
+            minValues.put(dNode.dNode, dNode.cost);
+            HashMap<WGraphNode, Integer> neighbors = dNode.dNode.neighbors;
+
+            for (WGraphNode neighbor : neighbors.keySet()){
+                Integer sumCost = dNode.cost + neighbors.get(neighbor);
+                Integer prevCost;
+                if(minValues.containsKey(neighbor)){
+                    prevCost = minValues.get(neighbor);
+                }
+                else{
+                    prevCost = Integer.MAX_VALUE;
+                }
+
+                if(sumCost < prevCost){
+                    DNode dNeighbor = new DNode(neighbor, sumCost);
+                    queue.add(dNeighbor);
+                    minValues.put(neighbor, sumCost);
+                }
+            }
+            dNode = queue.poll();
+        }
         return minValues;
+    }
+
+    static class DNode{
+        WGraphNode dNode;
+        Integer cost;
+
+        public DNode(WGraphNode dNode, Integer cost){
+            this.dNode = dNode;
+            this.cost = cost;
+        }
     }
 
     static WeightedGraph createRandomCompleteWeightedGraph(final int n){
