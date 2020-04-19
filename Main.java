@@ -2,7 +2,7 @@ import java.awt.dnd.DnDConstants;
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-
+        /*
         System.out.println("Traverse Town");
         System.out.println();
         GraphNode a = new GraphNode("A");
@@ -147,6 +147,7 @@ public class Main {
 
 
         System.out.println("I Node You Want Me");
+        System.out.println("Weighted graphs use WGraphNode instead of normal graph nodes");
         WGraphNode dA = new WGraphNode("A");
         WGraphNode dB = new WGraphNode("B");
         WGraphNode dC = new WGraphNode("C");
@@ -186,11 +187,65 @@ public class Main {
 
         System.out.println("Wish Upon A*");
 
+         */
+
 
 
 
     }
 
+    ArrayList<GridNode> astar(final GridNode sourceNode, final GridNode destNode){
+        ArrayList<GridNode> path = new ArrayList<GridNode>();
+        HashMap<GridNode, GridNode> nodesAndParents = new HashMap<GridNode,GridNode>();
+        HashMap<GridNode, Integer> nodesAndCosts = new HashMap<GridNode,Integer>();
+        PriorityQueue<StarNode> queue = new PriorityQueue<StarNode>();
+
+        int distToGoal = getManDist(sourceNode, destNode);
+        StarNode starNode = new StarNode(sourceNode,0, distToGoal);
+        nodesAndParents.put(sourceNode, null);
+        nodesAndCosts.put(sourceNode, 0);
+        queue.add(starNode);
+
+        GridNode parent = queue.poll().gridNode;
+        while(parent!= null && parent != destNode){
+
+            for(GridNode neighbor: parent.neighbors){
+                int costPlus = nodesAndCosts.get(parent) + 1;
+                int cost;
+                if(nodesAndCosts.containsKey(neighbor)){
+                    cost = nodesAndCosts.get(neighbor);
+                }
+                else{
+                    cost = Integer.MAX_VALUE;
+                }
+
+                if(costPlus < cost){
+                    int newDistToGoal = getManDist(neighbor, destNode);
+                    StarNode node = new StarNode(neighbor, costPlus, newDistToGoal);
+                    queue.add(node);
+                    nodesAndParents.put(neighbor, parent);
+                    nodesAndCosts.put(neighbor, costPlus);
+                }
+            }
+            parent = queue.poll().gridNode;
+        }
+
+        if(nodesAndParents.get(destNode) == null){
+            System.out.println("No Path Found");
+            return null;
+        }
+
+        path.add(destNode);
+        GridNode lastNode = destNode;
+
+        while(lastNode != null){
+            lastNode = nodesAndParents.get(lastNode);
+            path.add(0, lastNode);
+        }
+
+        return path;
+
+    }
 
     static class StarNode implements Comparable<StarNode>{
         GridNode gridNode;
@@ -344,10 +399,10 @@ public class Main {
             dag.addNode(s);
         }
 
-        int num = dag.vertices.size();
-        for (GraphNode node: dag.vertices) {
+        int num = dag.getAllNodes().size();
+        for (GraphNode node: dag.getAllNodes()) {
             int secondNodeIndex = random.nextInt(num);
-            GraphNode secondNode = dag.vertices.get(secondNodeIndex);
+            GraphNode secondNode = (GraphNode) dag.getAllNodes().toArray()[secondNodeIndex];
             dag.addDirectedEdge(node, secondNode);
         }
         return dag;

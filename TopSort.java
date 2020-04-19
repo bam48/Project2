@@ -3,7 +3,7 @@ import java.util.*;
 public class TopSort {
     ArrayList<GraphNode> kahns(final DirectedGraph graph){
         ArrayList<GraphNode> path = new ArrayList<GraphNode>();
-        Queue<GraphNode> queue = new LinkedList<GraphNode>();
+        Queue<GraphNode> indegreeOfZero = new LinkedList<GraphNode>();
         HashMap<GraphNode, Integer> nodeInDegree = new HashMap<GraphNode, Integer>();
 
 
@@ -18,17 +18,17 @@ public class TopSort {
             }
         }
 
-        addZerosToQueue(nodeInDegree, queue);
+        addZerosToQueue(nodeInDegree, indegreeOfZero);
 
-        while(!queue.isEmpty()) {
-            GraphNode node = queue.poll();
+        while(!indegreeOfZero.isEmpty()) {
+            GraphNode node = indegreeOfZero.poll();
             path.add(node);
 
             for(GraphNode neighbor: node.neighbors){
                 int newIn = nodeInDegree.get(neighbor) - 1;
                 nodeInDegree.replace(neighbor, newIn);
             }
-            addZerosToQueue(nodeInDegree, queue);
+            addZerosToQueue(nodeInDegree, indegreeOfZero);
         }
 
         return path;

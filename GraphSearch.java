@@ -4,7 +4,7 @@ public class GraphSearch {
     ArrayList<GraphNode> DFSRec(final GraphNode start, final GraphNode end){
         ArrayList<GraphNode> path = new ArrayList<GraphNode>();
 
-        if(start == null | end == null)
+        if(start == null || end == null)
             return null;
 
         if(start == end) {

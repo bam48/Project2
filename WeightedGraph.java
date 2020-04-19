@@ -26,10 +26,7 @@ class WGraphNode {
 }
 
 public class WeightedGraph {
-    public ArrayList<WGraphNode> vertices;
-    public WeightedGraph() {
-        this.vertices = new ArrayList<>();
-    }
+    public ArrayList<WGraphNode> vertices = new ArrayList<>();
 
     void addNode(final String nodeVal){
         WGraphNode newNode = new WGraphNode(nodeVal);
@@ -48,6 +45,9 @@ public class WeightedGraph {
 
     HashSet<WGraphNode> getAllNodes(){
         HashSet<WGraphNode> allNodes = new HashSet<WGraphNode>(vertices);
+        for(WGraphNode node: allNodes){
+            
+        }
         return allNodes;
     }
 }

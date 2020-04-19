@@ -8,8 +8,7 @@ public class Graph {
 
         void addNode(final String nodeVal){
 
-            GraphNode newNode = new GraphNode(nodeVal);
-            vertices.add(newNode);
+            vertices.add(new GraphNode(nodeVal));
         }
 
         void addUndirectedEdge(final GraphNode first, final GraphNode second){

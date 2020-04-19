@@ -1,10 +1,7 @@
 import java.util.*;
 
 public class DirectedGraph {
-    public ArrayList<GraphNode> vertices;
-    public DirectedGraph() {
-            this.vertices = new ArrayList<>();
-    }
+    private HashSet<GraphNode> vertices = new HashSet<GraphNode>();;
 
     void addNode(final String nodeVal){
         GraphNode newNode = new GraphNode(nodeVal);
@@ -21,8 +18,7 @@ public class DirectedGraph {
     }
 
     HashSet<GraphNode> getAllNodes(){
-        HashSet<GraphNode> allNodes = new HashSet<GraphNode>(vertices);
-        return allNodes;
+        return vertices;
     }
 
     void printAllNodes(){
