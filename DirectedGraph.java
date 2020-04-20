@@ -1,10 +1,13 @@
 import java.util.*;
 
 public class DirectedGraph {
-    private HashSet<GraphNode> vertices = new HashSet<GraphNode>();;
+    private HashSet<GraphNode> vertices = new HashSet<GraphNode>();
 
     void addNode(final String nodeVal){
         GraphNode newNode = new GraphNode(nodeVal);
+        vertices.add(newNode);
+    }
+    void addNode(final GraphNode newNode){
         vertices.add(newNode);
     }
 

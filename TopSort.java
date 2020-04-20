@@ -7,11 +7,11 @@ public class TopSort {
         HashMap<GraphNode, Integer> nodeInDegree = new HashMap<GraphNode, Integer>();
 
 
-        for(GraphNode node: graph.vertices){
+        for(GraphNode node: graph.getAllNodes()){
             nodeInDegree.put(node, 0);
         }
 
-        for(GraphNode node: graph.vertices){
+        for(GraphNode node: graph.getAllNodes()){
             for(GraphNode neighbor: node.neighbors){
                 int newIn = nodeInDegree.get(neighbor) + 1;
                 nodeInDegree.replace(neighbor, newIn);
@@ -47,7 +47,7 @@ public class TopSort {
         ArrayList<GraphNode> path = new ArrayList<GraphNode>();
         Stack<GraphNode> stack = new Stack<GraphNode>();
 
-        for(GraphNode node: graph.vertices){
+        for(GraphNode node: graph.getAllNodes()){
             if(!node.getVisited()){
                 mDFSUtil(node, stack);
             }

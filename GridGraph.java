@@ -12,6 +12,7 @@ class GridNode {
         this.y = y;
         this.data = data;
         this.neighbors = new HashSet<GridNode>();
+        this.edges = new HashSet<GridNode>();
         this.visited = false;
     }
 
@@ -46,7 +47,7 @@ public class GridGraph {
             int xDif = Math.abs(node.x - x);
             int yDif = Math.abs(node.y - y);
 
-            if(xDif <= 1 && yDif <= 1){
+            if(xDif <= 1 && yDif <= 1 && (node.x == x || node.y == y)){
                 node.neighbors.add(gridNode);
                 gridNode.neighbors.add(node);
             }
@@ -56,7 +57,7 @@ public class GridGraph {
 
     void addUndirectedEdge(final GridNode first, final GridNode second){
 
-        if(first.neighbors.contains(second) || second.neighbors.contains(first)){
+        if(first.neighbors.contains(second) && second.neighbors.contains(first)){
             first.edges.add(second);
             second.edges.add(first);
         }

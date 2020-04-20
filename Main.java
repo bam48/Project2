@@ -1,8 +1,7 @@
-import java.awt.dnd.DnDConstants;
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
-        /*
+
         System.out.println("Traverse Town");
         System.out.println();
         GraphNode a = new GraphNode("A");
@@ -125,10 +124,32 @@ public class Main {
         Graph graph6 =  new Graph();
         graph6.vertices = new ArrayList<>(List.of(aa,bb,cc,dd,ee,ff,gg,hh));
         graph6.printAllNodes();
-
         TopSort tp = new TopSort();
         DirectedGraph dg = new DirectedGraph();
-        dg.vertices = graph6.vertices;
+
+        GraphNode aaa = new GraphNode("A");
+        GraphNode bbb = new GraphNode("B");
+        GraphNode ccc = new GraphNode("C");
+        GraphNode ddd = new GraphNode("D");
+        GraphNode eee = new GraphNode("E");
+        GraphNode fff = new GraphNode("F");
+        GraphNode ggg = new GraphNode("G");
+        GraphNode hhh = new GraphNode("H");
+
+        aaa.neighbors = new ArrayList<>(List.of(bbb, ddd));
+        ccc.neighbors = new ArrayList<>(List.of (ddd, ggg, fff));
+        ddd.neighbors = new ArrayList<>(List.of(ggg));
+        hhh.neighbors = new ArrayList<>(List.of(eee, fff));
+
+        dg.addNode(aaa);
+        dg.addNode(bbb);
+        dg.addNode(ccc);
+        dg.addNode(ddd);
+        dg.addNode(eee);
+        dg.addNode(fff);
+        dg.addNode(ggg);
+        dg.addNode(hhh);
+
         ArrayList<GraphNode> kahnsPath  = tp.kahns(dg);
         ArrayList<GraphNode> mDFSPath  = tp.mDFS(dg);
         System.out.println("kahns");
@@ -186,106 +207,18 @@ public class Main {
 
 
         System.out.println("Wish Upon A*");
-
-         */
-
-
-
-
-    }
-
-    ArrayList<GridNode> astar(final GridNode sourceNode, final GridNode destNode){
-        ArrayList<GridNode> path = new ArrayList<GridNode>();
-        HashMap<GridNode, GridNode> nodesAndParents = new HashMap<GridNode,GridNode>();
-        HashMap<GridNode, Integer> nodesAndCosts = new HashMap<GridNode,Integer>();
-        PriorityQueue<StarNode> queue = new PriorityQueue<StarNode>();
-
-        int distToGoal = getManDist(sourceNode, destNode);
-        StarNode starNode = new StarNode(sourceNode,0, distToGoal);
-        nodesAndParents.put(sourceNode, null);
-        nodesAndCosts.put(sourceNode, 0);
-        queue.add(starNode);
-
-        GridNode parent = queue.poll().gridNode;
-        while(parent!= null && parent != destNode){
-
-            for(GridNode neighbor: parent.neighbors){
-                int costPlus = nodesAndCosts.get(parent) + 1;
-                int cost;
-                if(nodesAndCosts.containsKey(neighbor)){
-                    cost = nodesAndCosts.get(neighbor);
-                }
-                else{
-                    cost = Integer.MAX_VALUE;
-                }
-
-                if(costPlus < cost){
-                    int newDistToGoal = getManDist(neighbor, destNode);
-                    StarNode node = new StarNode(neighbor, costPlus, newDistToGoal);
-                    queue.add(node);
-                    nodesAndParents.put(neighbor, parent);
-                    nodesAndCosts.put(neighbor, costPlus);
-                }
-            }
-            parent = queue.poll().gridNode;
-        }
-
-        if(nodesAndParents.get(destNode) == null){
-            System.out.println("No Path Found");
-            return null;
-        }
-
-        path.add(destNode);
-        GridNode lastNode = destNode;
-
-        while(lastNode != null){
-            lastNode = nodesAndParents.get(lastNode);
-            path.add(0, lastNode);
-        }
-
-        return path;
-
-    }
-
-    static class StarNode implements Comparable<StarNode>{
-        GridNode gridNode;
-        int costSoFar;
-        int heuristic;
-        int totalCost;
-
-
-        public StarNode(GridNode starNode, int costSoFar, int heuristic) {
-           this.gridNode = starNode;
-           this.costSoFar = costSoFar;
-           this.heuristic = heuristic;
-           this.totalCost = this.costSoFar + this.heuristic;
-        }
-
-        @Override
-        public int compareTo(StarNode node){
-            if(totalCost < node.totalCost){
-                return -1;
-            }
-            if(totalCost > node.totalCost){
-                return 1;
-            }
-            return 0;
-        }
-
-    }
-
-    private static int getManDist(GridNode start, GridNode end){
-        int xDif = Math.abs(start.x - end.x);
-        int yDif = Math.abs(start.y - end.y);
-        return xDif + yDif;
+        GridGraph gGraph = createRandomGridGraph(100);
+        GridNode sourceNode = gGraph.vertices.get(0);
+        GridNode destNode = gGraph.vertices.get(gGraph.vertices.size()-1);
     }
 
 
-    GridGraph createRandomGridGraph(int n){
+
+    public static GridGraph createRandomGridGraph(int n){
         GridGraph gg = new GridGraph();
         for(int x = 0; x < n; x++){
             for(int y = 0; y < n; y++){
-                String xy = "(" + x + ", " + y + ")";
+                String xy = String.valueOf("(" + x + ", " + y + ")");
                 gg.addGridNode(x, y, xy);
             }
         }
@@ -392,9 +325,6 @@ public class Main {
         Random random = new Random();
 
         for(int i = 0; i < n; i++){
-            //char a = (char) (random.nextInt(26) + 'A');
-            //char b = (char) (random.nextInt(26) + 'A');
-            //String s = String.valueOf(a) + String.valueOf(b);
             String s  = String.valueOf(i);
             dag.addNode(s);
         }
@@ -450,6 +380,29 @@ public class Main {
 
         return graph;
     }
+
+
+    static class StarNode {
+        GridNode gridNode;
+        int costSoFar;
+        int heuristic;
+        int totalCost;
+
+
+        public StarNode(GridNode starNode, int costSoFar, int heuristic) {
+            this.gridNode = starNode;
+            this.costSoFar = costSoFar;
+            this.heuristic = heuristic;
+            this.totalCost = this.costSoFar + this.heuristic;
+        }
+    }
+
+    private static int getManDist(GridNode start, GridNode end){
+        int xDif = Math.abs(start.x - end.x);
+        int yDif = Math.abs(start.y - end.y);
+        return xDif + yDif;
+    }
+
 
     static ArrayList<GraphNode> BFTRecLinkedList(Graph graph){
         GraphSearch search = new GraphSearch();
